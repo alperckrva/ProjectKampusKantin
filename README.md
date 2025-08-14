@@ -2,9 +2,17 @@
 
 ## 📝 Proje Hakkında
 
-Kampus Kantin Projesi, üniversite kampüslerinde bulunan kantinler için geliştirilmiş modern bir NFC tabanlı ödeme ve yönetim sistemidir. Bu sistem, öğrencilerin NFC kartları ile hızlı ve güvenli alışveriş yapmalarını sağlar.
+Kampus Kantin Projesi, okul kantinlerinde öğrencilerin güvenli alışveriş yapması ve ailelerin çocuklarının harcamalarını takip edebilmesi için geliştirilmiş modern bir NFC tabanlı ödeme ve yönetim sistemidir. **Özellikle ortaokul ve ilkokul öğrencilerini nakit dolandırıcılığından korumak** ve **ailelere tam harcama kontrolü** sağlamak amacıyla tasarlanmıştır.
 
 ### 🎯 Projenin Amacı
+
+**Ana Hedef: Çocukların Mali Güvenliği ve Aile Kontrolü**
+- **👨‍👩‍👧‍👦 Aile Şeffaflığı**: Aileler çocuklarının ne aldığını, ne kadar harcadığını gerçek zamanlı takip edebilir
+- **🛡️ Dolandırıcılık Koruması**: Ortaokul ve ilkokul öğrencilerini nakit dolandırıcılığından koruma
+- **💰 Bütçe Kontrolü**: Öğrencilerin harcama limitlerini aileler belirleyebilir
+- **📊 Harcama Şeffaflığı**: Her satın alma detaylı olarak kaydedilir ve raporlanır
+
+**Teknik Hedefler:**
 - Kampus kantinlerinde nakit kullanımını minimize etmek
 - NFC teknolojisi ile hızlı ve güvenli ödeme sağlamak
 - Öğrencilere dijital bakiye yönetimi imkanı sunmak
@@ -233,14 +241,63 @@ ESP32 kodunda backend URL'ini güncelleyin:
 http.begin("http://BACKEND_IP:PORT/api/kart-okuma");
 ```
 
+## 🗄️ Veritabanı Kurulumu
+
+### Veritabanı Yapısı
+Proje **Microsoft SQL Server** kullanır. Veritabanı dosyaları `database/` klasöründe bulunur:
+
+- **schema.sql**: Tablo yapıları ve ilişkiler
+- **sample-data.sql**: Test için örnek veriler
+- **config-template.js**: Bağlantı ayarları şablonu
+
+### Hızlı Veritabanı Kurulumu
+
+1. **SQL Server kurulumu:**
+```bash
+# SQL Server Express indirin ve kurun
+# https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+```
+
+2. **Veritabanını oluşturun:**
+```sql
+-- SQL Server Management Studio'da çalıştırın
+-- Önce database/schema.sql dosyasını çalıştırın
+-- Sonra database/sample-data.sql dosyasını çalıştırın
+```
+
+3. **Backend bağlantı ayarları:**
+```javascript
+// Her backend klasöründe config.js oluşturun
+const config = {
+  server: 'localhost\\SQLEXPRESS',
+  database: 'KantinDB',
+  options: {
+    encrypt: false,
+    trustServerCertificate: true
+  },
+  connectionString: "Driver={ODBC Driver 17 for SQL Server};Server=localhost\\SQLEXPRESS;Database=KantinDB;Trusted_Connection=Yes;",
+  driver: "msnodesqlv8"
+};
+```
+
+Detaylı kurulum talimatları için `database/README.md` dosyasına bakın.
+
 ## 📱 Kullanım Kılavuzu
 
 ### 👨‍🎓 Öğrenci Kullanımı
-1. **Kayıt Olma**: Mobil uygulama veya web üzerinden hesap oluşturun
-2. **Kart Tanımlama**: NFC kartınızı sisteme kaydedin
-3. **Bakiye Yükleme**: Online ödeme ile bakiye ekleyin
-4. **Alışveriş**: Kantinde NFC kartınızı okutarak ödeme yapın
-5. **Takip**: Harcamalarınızı mobil uygulamadan takip edin
+1. **Kayıt Olma**: Aile onayı ile mobil uygulama veya web üzerinden hesap oluşturun
+2. **Kart Tanımlama**: Okul tarafından verilen NFC kartını sisteme kaydedin
+3. **Bakiye Kontrolü**: Güncel bakiyenizi mobil uygulamadan kontrol edin
+4. **Güvenli Alışveriş**: Kantinde NFC kartınızı okutarak ödeme yapın (nakit gerekmez!)
+5. **Harcama Takibi**: Tüm alışverişleriniz otomatik olarak kaydedilir ve ailenizle paylaşılır
+
+### 👨‍👩‍👧‍👦 Aile Kullanımı
+1. **Çocuk Hesabı Kontrolü**: Çocuğunuzun hesabını web panelinden yönetin
+2. **Bakiye Yükleme**: Güvenli online ödeme ile bakiye ekleyin
+3. **Harcama Takibi**: Ne aldığını, ne zaman aldığını gerçek zamanlı görün
+4. **Limit Belirleme**: Günlük/haftalık harcama limitleri belirleyin
+5. **Alarm Sistemi**: Belirlenen limitleri aştığında bildirim alın
+6. **Detaylı Raporlar**: Aylık harcama raporlarını inceleyin
 
 ### 🏪 Kantin İşletmecisi Kullanımı
 1. **Giriş**: Market yönetim sistemine giriş yapın
@@ -319,8 +376,15 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosy
 
 ## 🔮 Gelecek Planları
 
+**Aile Güvenlik Özellikleri:**
+- [ ] **SMS/Email Bildirim**: Her alışverişte anlık bildirim
+- [ ] **Harcama Limitleri**: Günlük/haftalık limit belirleme
+- [ ] **Yasaklı Ürünler**: Belirli ürünleri engelleme (abur cubur vs.)
+- [ ] **Acil Durum Modu**: Kart kaybolduğunda anında dondurma
+
+**Teknik Geliştirmeler:**
 - [ ] **QR Code** ödeme desteği
-- [ ] **Biyometrik** kimlik doğrulama
+- [ ] **Biyometrik** kimlik doğrulama  
 - [ ] **AI tabanlı** harcama analizi
 - [ ] **Push notification** sistemi
 - [ ] **Dark mode** tema desteği
